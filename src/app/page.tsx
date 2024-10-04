@@ -1,25 +1,33 @@
 "use client";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
+
+const TOAST_CONFIG: any = {
+  position: "top-center",
+  autoClose: 5000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined,
+  theme: "light",
+};
 
 export default function Home() {
   const [file, setFile] = useState<File | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile && selectedFile.type === "text/csv") {
       setFile(selectedFile);
-      setError(null); // Reset error
     } else {
-      setError("Please upload a valid CSV file.");
-      setFile(null);
+      toast.error("Please upload a valid CSV file.", TOAST_CONFIG);
     }
   };
 
   const handleUpload = async () => {
     if (!file) {
-      setError("No file selected!");
+      toast.error("No file selected!", TOAST_CONFIG);
       return;
     }
 
@@ -33,18 +41,41 @@ export default function Home() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to upload file.");
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to upload file.");
       }
 
-      setSuccessMessage("File uploaded successfully!");
-      setError(null);
-      setFile(null); // Clear the file input
+      const data = await response.json();
+      toast.success(
+        `${data.data.message}, inserted: ${data.data.insertedCount}`,
+        TOAST_CONFIG
+      );
     } catch (err) {
-      // Handle the error and ensure the type is a string
       const errorMessage =
         (err as Error).message || "An unknown error occurred.";
       console.error("Upload error:", errorMessage);
-      setError(errorMessage);
+      toast.error(errorMessage, TOAST_CONFIG);
+    }
+  };
+
+  const handleClearData = async () => {
+    try {
+      const response = await fetch("http://localhost:4000/api/v1/graphs", {
+        method: "Delete",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to upload file.");
+      }
+
+      const data = await response.json();
+      toast.success(data.message, TOAST_CONFIG);
+    } catch (err) {
+      const errorMessage =
+        (err as Error).message || "An unknown error occurred.";
+      console.error("Upload error:", errorMessage);
+      toast.error(errorMessage, TOAST_CONFIG);
     }
   };
 
@@ -53,24 +84,22 @@ export default function Home() {
       <div className="min-w-[800px]">
         <label
           className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          htmlFor="multiple_files"
+          htmlFor="csv_file_input"
         >
           Upload CSV
         </label>
         <input
           className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-          id="multiple_files"
+          id="csv_file_input"
           type="file"
           accept=".csv"
-          onChange={handleFileChange} // Handle file change
+          onChange={handleFileChange}
         />
-        {error && <p className="text-red-600">{error}</p>}
-        {successMessage && <p className="text-green-600">{successMessage}</p>}
       </div>
 
       <button
         onClick={handleUpload}
-        className="mt-4 px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+        className="mt-4 px-20 py-2 text-white bg-gray-900 rounded-lg hover:bg-gray-700"
       >
         Upload
       </button>
@@ -101,6 +130,13 @@ export default function Home() {
           </a>
         </p>
       </div>
+
+      <button
+        onClick={handleClearData}
+        className="mt-4 px-4 py-2 text-white bg-red-700 rounded-lg opacity-0 hover:opacity-100 transition-all duration-700 delay-500"
+      >
+        Clear Graph Data
+      </button>
     </div>
   );
 }
