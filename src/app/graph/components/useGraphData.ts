@@ -1,16 +1,16 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
-export interface DataPoint {
-  x: number;
-  y: number;
+interface DataPoint {
+  x: number; // Timestamp
+  y: number; // Value
 }
 
-export interface SeriesData {
+interface SeriesData {
   name: string;
   data: DataPoint[];
 }
 
-export interface FetchResponse {
+interface FetchResponse {
   data: Array<{
     cellId: string;
     resultTime: DataPoint[];
@@ -24,8 +24,8 @@ const useGraphData = (
   selectedEnodeId: string
 ) => {
   const [series, setSeries] = useState<SeriesData[]>([]);
-  const [isLoading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setLoading] = useState<boolean>(false);
 
   const fetchData = useCallback(async () => {
     if (!startDate || !endDate) return;
@@ -62,7 +62,7 @@ const useGraphData = (
     fetchData();
   }, [fetchData]);
 
-  return { series, isLoading, error };
+  return { series, error, isLoading };
 };
 
 export default useGraphData;

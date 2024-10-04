@@ -9,11 +9,12 @@ const useEnodeIds = () => {
   const {
     cellEnodeMap,
     error: cellEnodeMapError,
-    isLoading: isCellnodeLoading,
+    isLoading: isCellEnodeLoading,
   } = useCellEnodeMap();
 
   useEffect(() => {
     if (!selectedCellId) {
+      setSelectedEnodeId("");
       setEnodeIds([]);
       return;
     }
@@ -23,13 +24,14 @@ const useEnodeIds = () => {
   }, [selectedCellId, cellEnodeMap]);
 
   return {
+    cellEnodeMap,
     selectedCellId,
     setSelectedCellId,
     selectedEnodeId,
     setSelectedEnodeId,
     enodeIds,
     cellEnodeMapError,
-    isCellnodeLoading,
+    isCellEnodeLoading,
   };
 };
 

@@ -1,11 +1,12 @@
 "use client";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState } from "react";
 import DateRangePicker from "./DateRangePicker";
 import CellEnodeSelect from "./CellEnodeSelect";
-import useCellEnodeMap from "./useCellEnodeMap";
 import chartOptions from "./ChartOptions";
 import ChartRenderer from "./ChartRenderer";
 import BackButton from "./BackButton";
+import useEnodeIds from "./useEnodeId";
+import useGraphData from "./useGraphData";
 
 interface DataPoint {
   x: number;
@@ -25,60 +26,26 @@ interface FetchResponse {
 }
 
 const Graph: React.FC = () => {
-  const [series, setSeries] = useState<SeriesData[]>([]);
-  const [error, setError] = useState<string | null>(null);
   const [startDate, setStartDate] = useState<string>("2022-07-01");
   const [endDate, setEndDate] = useState<string>("2022-07-31");
-  const [selectedCellId, setSelectedCellId] = useState<string>("");
-  const [selectedEnodeId, setSelectedEnodeId] = useState<string>("");
-  const [enodeIds, setEnodeIds] = useState<string[]>([]);
 
   const {
     cellEnodeMap,
-    error: cellEnodeMapError,
-    isLoading: isCellEnodeLoading,
-  } = useCellEnodeMap();
+    selectedCellId,
+    setSelectedCellId,
+    selectedEnodeId,
+    setSelectedEnodeId,
+    enodeIds,
+    cellEnodeMapError,
+    isCellEnodeLoading,
+  } = useEnodeIds();
 
-  const fetchData = useCallback(async () => {
-    if (!startDate || !endDate) return;
-    setError(null);
-
-    try {
-      const queryParams = new URLSearchParams({ startDate, endDate });
-      if (selectedCellId) queryParams.append("cellId", selectedCellId);
-      if (selectedEnodeId) queryParams.append("enodebId", selectedEnodeId);
-
-      const response = await fetch(
-        `http://localhost:4000/api/v1/graphs/date-range?${queryParams.toString()}`
-      );
-      if (!response.ok) throw new Error("Network response was not ok");
-
-      const data: FetchResponse = await response.json();
-      const parsedData: SeriesData[] = data.data.map((itm) => ({
-        name: `Cell ID (${itm.cellId})`,
-        data: itm.resultTime || [],
-      }));
-
-      setSeries(parsedData);
-    } catch (err) {
-      console.error("Fetch error:", err);
-      setError("Failed to fetch data.");
-    }
-  }, [startDate, endDate, selectedCellId, selectedEnodeId]);
-
-  useEffect(() => {
-    if (!selectedCellId) {
-      setEnodeIds([]);
-      return;
-    }
-
-    const ids = cellEnodeMap[selectedCellId] || [];
-    setEnodeIds(ids);
-  }, [selectedCellId, cellEnodeMap]);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+  const { series, error } = useGraphData(
+    startDate,
+    endDate,
+    selectedCellId,
+    selectedEnodeId
+  );
 
   if (error || cellEnodeMapError) return <p>{error || cellEnodeMapError}</p>;
 
