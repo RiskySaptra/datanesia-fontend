@@ -8,23 +8,6 @@ import BackButton from "./BackButton";
 import useEnodeIds from "./useEnodeId";
 import useGraphData from "./useGraphData";
 
-interface DataPoint {
-  x: number;
-  y: number;
-}
-
-interface SeriesData {
-  name: string;
-  data: DataPoint[];
-}
-
-interface FetchResponse {
-  data: Array<{
-    cellId: string;
-    resultTime: DataPoint[];
-  }>;
-}
-
 const Graph: React.FC = () => {
   const [startDate, setStartDate] = useState<string>("2022-07-01");
   const [endDate, setEndDate] = useState<string>("2022-07-31");

@@ -18,7 +18,7 @@ const useCellEnodeMap = () => {
     setIsLoading(true);
     try {
       const response = await fetch(
-        `http://localhost:4000/api/v1/graphs/filter`
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/graphs/filter`
       );
       if (!response.ok) throw new Error("Failed to fetch cell-enode map");
 

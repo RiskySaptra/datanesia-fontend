@@ -5,7 +5,7 @@ interface DataPoint {
   y: number; // Value
 }
 
-interface SeriesData {
+export interface SeriesData {
   name: string;
   data: DataPoint[];
 }
@@ -39,7 +39,9 @@ const useGraphData = (
       if (selectedEnodeId) queryParams.append("enodebId", selectedEnodeId);
 
       const response = await fetch(
-        `http://localhost:4000/api/v1/graphs/date-range?${queryParams.toString()}`
+        `${
+          process.env.NEXT_PUBLIC_BASE_URL
+        }/api/v1/graphs/date-range?${queryParams.toString()}`
       );
       if (!response.ok) throw new Error("Network response was not ok");
 

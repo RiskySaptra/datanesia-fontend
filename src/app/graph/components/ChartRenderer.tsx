@@ -1,13 +1,14 @@
 import dynamic from "next/dynamic";
 import React from "react";
 import { SeriesData } from "./useGraphData";
+import { ApexOptions } from "apexcharts";
 
 // Dynamically import the Chart component from react-apexcharts
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 interface ChartRendererProps {
   series: SeriesData[];
-  chartOptions: any; // Replace `any` with the actual type if known
+  chartOptions: ApexOptions; // Replace `any` with the actual type if known
 }
 
 const ChartRenderer: React.FC<ChartRendererProps> = ({
