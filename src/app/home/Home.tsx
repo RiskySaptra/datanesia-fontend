@@ -5,7 +5,7 @@ import { useFileUpload } from "./useFileUpload";
 import { handleClearData } from "./useClearData";
 
 export default function Home() {
-  const { file, handleFileChange, handleUpload } = useFileUpload();
+  const { handleFileChange, handleUpload } = useFileUpload();
 
   return (
     <div className="h-screen flex justify-center items-center flex-col gap-5">
