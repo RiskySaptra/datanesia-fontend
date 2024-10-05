@@ -58,13 +58,15 @@ export default function Home() {
           </a>
         </p>
       </div>
-
-      <button
-        onClick={handleClearData}
-        className="mt-4 px-4 py-2 text-white bg-red-700 rounded-lg opacity-0 hover:opacity-100 transition-all duration-700 delay-500"
-      >
-        Clear Graph Data
-      </button>
+      <div className="flex items-center flex-col group cursor-pointer">
+        <p className="text-[10px] text-gray-400">Hover here to clear data</p>
+        <button
+          onClick={handleClearData}
+          className="px-4 py-2 text-white bg-red-700 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 delay-300"
+        >
+          Clear Graph Data
+        </button>
+      </div>
     </div>
   );
 }
