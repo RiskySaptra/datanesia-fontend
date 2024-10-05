@@ -20,7 +20,7 @@ const chartOptions: ApexOptions = {
   },
   tooltip: {
     x: {
-      format: "dd-MMMM-yyyy ",
+      format: "dd MMMM yyyy ",
     },
     y: {
       formatter: function (value: any) {
