@@ -11,6 +11,12 @@ const chartOptions: ApexOptions = {
   },
   yaxis: {
     opposite: true,
+    labels: {
+      offsetX: -10,
+      formatter: (val: string | number | number[], opts?: any) => {
+        return val + "%";
+      },
+    },
   },
 
   dataLabels: {
