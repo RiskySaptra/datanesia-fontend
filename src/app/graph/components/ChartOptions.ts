@@ -13,14 +13,14 @@ const chartOptions: ApexOptions = {
     opposite: true,
     labels: {
       offsetX: -10,
-      formatter: (val: string | number | number[], opts?: any) => {
+      formatter: (val: string | number | number[]) => {
         return val + "%";
       },
     },
   },
 
   dataLabels: {
-    formatter: (val: string | number | number[], opts?: any) => {
+    formatter: (val: string | number | number[]) => {
       return val + "%";
     },
   },
@@ -29,7 +29,7 @@ const chartOptions: ApexOptions = {
       format: "dd MMMM yyyy ",
     },
     y: {
-      formatter: function (value: any) {
+      formatter: function (value: number) {
         return value + "%";
       },
     },
