@@ -64,7 +64,7 @@ export default function Home() {
           onClick={handleClearData}
           className="px-4 py-2 text-white bg-red-700 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 delay-300"
         >
-          Clear Graph Data
+          Clear All Data
         </button>
       </div>
     </div>
